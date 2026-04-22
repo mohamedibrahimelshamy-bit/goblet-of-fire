@@ -133,7 +133,7 @@
     align-items: flex-end;
     padding: 24px 0 8px;
     position: relative;
-    min-height: 420px;
+    min-height: 640px;
   }
   .goblet-wrap {
     position: relative;
@@ -142,67 +142,66 @@
     filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
   }
 
-  /* Flame stack sits ABOVE goblet bowl */
-  .flames {
+  /* Cinematic SVG fire — originates from inside the bowl opening */
+  .fire-svg {
     position: absolute;
     left: 50%;
-    top: -30px;
+    top: -320px;
     transform: translateX(-50%);
-    width: 220px;
-    height: 260px;
+    width: 440px;
+    height: 440px;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+    filter: drop-shadow(0 0 22px rgba(41, 182, 246, 0.45));
+  }
+  .goblet-wrap.picking .fire-svg {
+    filter: drop-shadow(0 0 28px rgba(255, 122, 31, 0.6));
+  }
+  .fire-svg .fire-aura  { mix-blend-mode: screen; opacity: 0.75; }
+  .fire-svg .fire-body  { mix-blend-mode: screen; opacity: 0.95; }
+  .fire-svg .fire-core  { mix-blend-mode: screen; opacity: 1; }
+  .fire-svg .fire-spark { mix-blend-mode: screen; }
+
+  .fire-svg .fire-aura  { fill: url(#fireAuraBlue); }
+  .fire-svg .fire-body  { fill: url(#fireBodyBlue); }
+  .fire-svg .fire-body2 { fill: url(#fireBodyBlue); }
+  .fire-svg .fire-core  { fill: url(#fireCoreBlue); }
+  .fire-svg .fire-spark { fill: #bfefff; }
+
+  /* Goblet sits above fire so bowl rim occludes flame base -> looks like flame is inside */
+  .goblet { z-index: 2; }
+
+  /* Inner bowl glow — so the inside of the cup glows the flame color */
+  .bowl-glow {
+    position: absolute;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 50%, #7fdcff 0%, #29b6f6 40%, rgba(14,79,138,0.6) 70%, transparent 100%);
+    filter: blur(6px);
+    mix-blend-mode: screen;
     pointer-events: none;
     z-index: 3;
+    opacity: 0.9;
+    animation: bowlPulse 2.4s ease-in-out infinite alternate;
   }
-  .flame {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform-origin: bottom center;
-    border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
-    mix-blend-mode: screen;
-    filter: blur(2px);
-    animation: flicker 1.6s ease-in-out infinite alternate;
-  }
-  .flame.f1 {
-    width: 180px; height: 220px;
-    margin-left: -90px;
-    background: radial-gradient(ellipse at 50% 90%, var(--flame-blue-1) 0%, var(--flame-blue-2) 40%, var(--flame-blue-3) 75%, transparent 100%);
-    animation-duration: 1.9s;
-    opacity: 0.95;
-  }
-  .flame.f2 {
-    width: 130px; height: 170px;
-    margin-left: -65px;
-    background: radial-gradient(ellipse at 50% 90%, #eaf8ff 0%, var(--flame-blue-1) 45%, var(--flame-blue-2) 80%, transparent 100%);
-    animation-duration: 1.3s;
-    animation-delay: 0.2s;
-  }
-  .flame.f3 {
-    width: 70px; height: 110px;
-    margin-left: -35px;
-    background: radial-gradient(ellipse at 50% 90%, #ffffff 0%, #e3f6ff 60%, var(--flame-blue-1) 100%);
-    animation-duration: 0.9s;
-    animation-delay: 0.4s;
-  }
-  @keyframes flicker {
-    0%   { transform: translateX(-4px) scaleY(1)   scaleX(1);   opacity: 0.85; }
-    30%  { transform: translateX(3px)  scaleY(1.08) scaleX(0.95); opacity: 1; }
-    60%  { transform: translateX(-2px) scaleY(0.94) scaleX(1.05); opacity: 0.9; }
-    100% { transform: translateX(4px)  scaleY(1.05) scaleX(0.97); opacity: 0.95; }
+  @keyframes bowlPulse {
+    0%   { opacity: 0.55; transform: translateX(-50%) scale(0.95); }
+    100% { opacity: 1;    transform: translateX(-50%) scale(1.08); }
   }
 
-  /* Flame mode: red/gold when picking */
-  .goblet-wrap.picking .flame.f1 {
-    background: radial-gradient(ellipse at 50% 90%, var(--flame-red-1) 0%, var(--flame-red-2) 45%, var(--flame-red-3) 80%, transparent 100%);
-    width: 240px; height: 300px; margin-left: -120px;
-  }
-  .goblet-wrap.picking .flame.f2 {
-    background: radial-gradient(ellipse at 50% 90%, #fffbe0 0%, #ffcc33 45%, var(--flame-red-2) 85%, transparent 100%);
-    width: 170px; height: 220px; margin-left: -85px;
-  }
-  .goblet-wrap.picking .flame.f3 {
-    background: radial-gradient(ellipse at 50% 90%, #ffffff 0%, #fff3a8 60%, #ff9a3c 100%);
-    width: 90px; height: 140px; margin-left: -45px;
+  /* Picking mode: swap gradients + shake */
+  .goblet-wrap.picking .fire-aura  { fill: url(#fireAuraRed); }
+  .goblet-wrap.picking .fire-body  { fill: url(#fireBodyRed); }
+  .goblet-wrap.picking .fire-body2 { fill: url(#fireBodyRed); }
+  .goblet-wrap.picking .fire-core  { fill: url(#fireCoreRed); }
+  .goblet-wrap.picking .fire-spark { fill: #ffe6a8; }
+  .goblet-wrap.picking .bowl-glow {
+    background: radial-gradient(ellipse at 50% 50%, #fff3a8 0%, #ff7a1f 40%, rgba(179,26,0,0.6) 70%, transparent 100%);
   }
   .goblet-wrap.picking { animation: shake 0.12s linear infinite; }
   @keyframes shake {
@@ -871,11 +870,194 @@
 
     <section class="stage" aria-label="The Goblet of Fire">
       <div class="goblet-wrap" id="gobletWrap">
-        <div class="flames">
-          <div class="flame f1"></div>
-          <div class="flame f2"></div>
-          <div class="flame f3"></div>
-        </div>
+        <svg class="fire-svg" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <!-- Blue flame gradients -->
+            <radialGradient id="fireAuraBlue" cx="50%" cy="85%" r="65%">
+              <stop offset="0%"  stop-color="#7fdcff" stop-opacity="0.9"/>
+              <stop offset="35%" stop-color="#29b6f6" stop-opacity="0.55"/>
+              <stop offset="70%" stop-color="#0e4f8a" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#0e4f8a" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fireBodyBlue" cx="50%" cy="90%" r="55%">
+              <stop offset="0%"  stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="20%" stop-color="#eaf8ff" stop-opacity="0.95"/>
+              <stop offset="45%" stop-color="#7fdcff" stop-opacity="0.85"/>
+              <stop offset="75%" stop-color="#29b6f6" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#0e4f8a" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fireCoreBlue" cx="50%" cy="92%" r="45%">
+              <stop offset="0%"  stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="35%" stop-color="#eaf8ff" stop-opacity="0.95"/>
+              <stop offset="70%" stop-color="#7fdcff" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#7fdcff" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- Red flame gradients (picking mode) -->
+            <radialGradient id="fireAuraRed" cx="50%" cy="85%" r="65%">
+              <stop offset="0%"  stop-color="#ffcf6e" stop-opacity="0.9"/>
+              <stop offset="35%" stop-color="#ff7a1f" stop-opacity="0.6"/>
+              <stop offset="70%" stop-color="#b31a00" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#5a0e00" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fireBodyRed" cx="50%" cy="90%" r="55%">
+              <stop offset="0%"  stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="18%" stop-color="#fff3a8" stop-opacity="0.98"/>
+              <stop offset="45%" stop-color="#ffb347" stop-opacity="0.85"/>
+              <stop offset="75%" stop-color="#ff7a1f" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#b31a00" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fireCoreRed" cx="50%" cy="92%" r="45%">
+              <stop offset="0%"  stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="35%" stop-color="#fff3a8" stop-opacity="0.95"/>
+              <stop offset="70%" stop-color="#ffb347" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ff7a1f" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- Turbulence-driven displacement for organic, movie-like motion -->
+            <filter id="fireTurbOuter" x="-30%" y="-20%" width="160%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3" result="noise">
+                <animate attributeName="baseFrequency" dur="6s"
+                         values="0.012 0.028; 0.018 0.04; 0.013 0.03; 0.012 0.028"
+                         repeatCount="indefinite"/>
+                <animate attributeName="seed" dur="3.5s" values="3;12;22;5;3" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="18">
+                <animate attributeName="scale" dur="4.5s" values="12;22;14;20;12" repeatCount="indefinite"/>
+              </feDisplacementMap>
+              <feGaussianBlur stdDeviation="2.5"/>
+            </filter>
+            <filter id="fireTurbInner" x="-25%" y="-15%" width="150%" height="130%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.022 0.055" numOctaves="2" seed="7" result="noise">
+                <animate attributeName="baseFrequency" dur="3.2s"
+                         values="0.022 0.055; 0.028 0.07; 0.023 0.058; 0.022 0.055"
+                         repeatCount="indefinite"/>
+                <animate attributeName="seed" dur="2.1s" values="7;18;2;11;7" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="10">
+                <animate attributeName="scale" dur="2.6s" values="7;14;9;12;7" repeatCount="indefinite"/>
+              </feDisplacementMap>
+              <feGaussianBlur stdDeviation="1"/>
+            </filter>
+            <filter id="fireTurbCore" x="-20%" y="-10%" width="140%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04 0.09" numOctaves="1" seed="5" result="noise">
+                <animate attributeName="seed" dur="1.4s" values="5;19;8;14;5" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="5">
+                <animate attributeName="scale" dur="1.9s" values="3;7;4;6;3" repeatCount="indefinite"/>
+              </feDisplacementMap>
+            </filter>
+          </defs>
+
+          <!-- Outer aura: broad, soft halo. Base centered at (180, 330). -->
+          <g filter="url(#fireTurbOuter)">
+            <path class="fire-aura"
+                  d="M 180 340
+                     C 110 330 80 240 110 170
+                     C 130 120 150 90 150 50
+                     C 160 100 200 110 220 150
+                     C 260 210 260 300 180 340 Z">
+              <animate attributeName="d" dur="5.2s" repeatCount="indefinite"
+                values="
+                M 180 340 C 110 330 80 240 110 170 C 130 120 150 90 150 50 C 160 100 200 110 220 150 C 260 210 260 300 180 340 Z;
+                M 180 340 C 115 328 85 235 120 160 C 140 110 165 85 170 40 C 175 95 205 115 230 160 C 265 215 255 300 180 340 Z;
+                M 180 340 C 105 332 78 248 100 175 C 125 130 155 95 160 55 C 170 110 210 105 225 155 C 258 205 265 300 180 340 Z;
+                M 180 340 C 112 330 82 242 115 168 C 135 118 152 88 155 48 C 165 100 202 112 222 152 C 262 212 262 300 180 340 Z;
+                M 180 340 C 110 330 80 240 110 170 C 130 120 150 90 150 50 C 160 100 200 110 220 150 C 260 210 260 300 180 340 Z"
+              />
+            </path>
+          </g>
+
+          <!-- Main flame body: two offset tongues, morphing independently -->
+          <g filter="url(#fireTurbInner)">
+            <path class="fire-body"
+                  d="M 180 340
+                     C 135 330 115 260 135 200
+                     C 150 155 170 130 172 90
+                     C 180 130 205 150 220 190
+                     C 235 240 228 320 180 340 Z">
+              <animate attributeName="d" dur="3.4s" repeatCount="indefinite"
+                values="
+                M 180 340 C 135 330 115 260 135 200 C 150 155 170 130 172 90 C 180 130 205 150 220 190 C 235 240 228 320 180 340 Z;
+                M 180 340 C 140 332 118 258 142 196 C 158 150 172 125 168 80 C 176 125 210 148 225 188 C 238 238 226 320 180 340 Z;
+                M 180 340 C 132 330 112 265 130 205 C 148 160 168 135 178 100 C 186 135 203 155 218 195 C 232 245 230 322 180 340 Z;
+                M 180 340 C 137 330 116 262 138 202 C 152 158 171 128 170 88 C 178 128 207 152 222 192 C 236 242 228 320 180 340 Z;
+                M 180 340 C 135 330 115 260 135 200 C 150 155 170 130 172 90 C 180 130 205 150 220 190 C 235 240 228 320 180 340 Z"
+              />
+            </path>
+            <path class="fire-body2"
+                  d="M 180 340
+                     C 148 330 138 270 152 220
+                     C 162 185 178 158 180 120
+                     C 185 160 200 180 210 220
+                     C 220 270 215 325 180 340 Z"
+                  opacity="0.7">
+              <animate attributeName="d" dur="2.8s" repeatCount="indefinite"
+                values="
+                M 180 340 C 148 330 138 270 152 220 C 162 185 178 158 180 120 C 185 160 200 180 210 220 C 220 270 215 325 180 340 Z;
+                M 180 340 C 152 332 140 272 155 222 C 165 188 180 160 176 110 C 184 162 202 182 212 222 C 222 272 214 325 180 340 Z;
+                M 180 340 C 145 330 135 268 148 218 C 158 182 176 155 184 128 C 188 158 198 178 208 218 C 218 268 216 325 180 340 Z;
+                M 180 340 C 150 331 139 271 153 221 C 163 186 179 159 178 118 C 186 160 201 181 211 221 C 221 271 215 325 180 340 Z;
+                M 180 340 C 148 330 138 270 152 220 C 162 185 178 158 180 120 C 185 160 200 180 210 220 C 220 270 215 325 180 340 Z"
+              />
+            </path>
+          </g>
+
+          <!-- White-hot core -->
+          <g filter="url(#fireTurbCore)">
+            <path class="fire-core"
+                  d="M 180 338
+                     C 160 328 155 280 168 240
+                     C 175 215 182 195 184 160
+                     C 188 195 198 215 204 240
+                     C 215 280 202 330 180 338 Z">
+              <animate attributeName="d" dur="2.1s" repeatCount="indefinite"
+                values="
+                M 180 338 C 160 328 155 280 168 240 C 175 215 182 195 184 160 C 188 195 198 215 204 240 C 215 280 202 330 180 338 Z;
+                M 180 338 C 162 330 156 282 170 242 C 176 218 184 198 180 152 C 186 198 200 218 206 242 C 216 282 203 330 180 338 Z;
+                M 180 338 C 158 328 153 278 166 238 C 173 212 180 192 186 168 C 190 192 196 212 202 238 C 214 278 200 330 180 338 Z;
+                M 180 338 C 161 329 155 281 169 241 C 175 216 182 196 183 158 C 188 196 199 216 205 241 C 215 281 202 330 180 338 Z;
+                M 180 338 C 160 328 155 280 168 240 C 175 215 182 195 184 160 C 188 195 198 215 204 240 C 215 280 202 330 180 338 Z"
+              />
+            </path>
+          </g>
+
+          <!-- Rising sparks / embers detaching from the flame -->
+          <g>
+            <circle class="fire-spark" r="2" cx="170" cy="320">
+              <animate attributeName="cy" dur="2.6s" values="310;80" repeatCount="indefinite"/>
+              <animate attributeName="cx" dur="2.6s" values="170;150;180;160" repeatCount="indefinite"/>
+              <animate attributeName="opacity" dur="2.6s" values="0;1;0.9;0" repeatCount="indefinite"/>
+              <animate attributeName="r" dur="2.6s" values="2.2;1.8;1.2;0.6" repeatCount="indefinite"/>
+            </circle>
+            <circle class="fire-spark" r="1.8" cx="200" cy="325">
+              <animate attributeName="cy" dur="3.2s" begin="0.4s" values="315;70" repeatCount="indefinite"/>
+              <animate attributeName="cx" dur="3.2s" begin="0.4s" values="200;215;190;205" repeatCount="indefinite"/>
+              <animate attributeName="opacity" dur="3.2s" begin="0.4s" values="0;1;0.8;0" repeatCount="indefinite"/>
+              <animate attributeName="r" dur="3.2s" begin="0.4s" values="2;1.5;1;0.5" repeatCount="indefinite"/>
+            </circle>
+            <circle class="fire-spark" r="1.5" cx="185" cy="315">
+              <animate attributeName="cy" dur="2.2s" begin="1.1s" values="308;90" repeatCount="indefinite"/>
+              <animate attributeName="cx" dur="2.2s" begin="1.1s" values="185;175;195;182" repeatCount="indefinite"/>
+              <animate attributeName="opacity" dur="2.2s" begin="1.1s" values="0;1;0.7;0" repeatCount="indefinite"/>
+              <animate attributeName="r" dur="2.2s" begin="1.1s" values="1.8;1.3;0.9;0.4" repeatCount="indefinite"/>
+            </circle>
+            <circle class="fire-spark" r="1.2" cx="160" cy="318">
+              <animate attributeName="cy" dur="2.8s" begin="1.7s" values="310;100" repeatCount="indefinite"/>
+              <animate attributeName="cx" dur="2.8s" begin="1.7s" values="160;145;165;155" repeatCount="indefinite"/>
+              <animate attributeName="opacity" dur="2.8s" begin="1.7s" values="0;1;0.6;0" repeatCount="indefinite"/>
+            </circle>
+            <circle class="fire-spark" r="1.5" cx="210" cy="320">
+              <animate attributeName="cy" dur="3.5s" begin="0.9s" values="312;60" repeatCount="indefinite"/>
+              <animate attributeName="cx" dur="3.5s" begin="0.9s" values="210;225;200;218" repeatCount="indefinite"/>
+              <animate attributeName="opacity" dur="3.5s" begin="0.9s" values="0;1;0.8;0" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
+
+        <!-- Glow inside the bowl so it looks like the fire originates from within -->
+        <div class="bowl-glow" aria-hidden="true"></div>
+
         <svg class="goblet" viewBox="0 0 280 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="0%">
