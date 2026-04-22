@@ -1,0 +1,1462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Goblet of Fire — HRS Keycard Champions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --stone-0: #05060a;
+    --stone-1: #0d0f18;
+    --stone-2: #141828;
+    --stone-3: #1f2438;
+    --parchment: #e9d5a6;
+    --parchment-edge: #b8955a;
+    --ink: #3b2a14;
+    --gold: #d4af37;
+    --gold-bright: #ffd966;
+    --bronze: #a67c52;
+    --bronze-dark: #5a3f22;
+    --bronze-rim: #c9a76a;
+    --flame-blue-1: #7fdcff;
+    --flame-blue-2: #29b6f6;
+    --flame-blue-3: #0e4f8a;
+    --flame-red-1: #fff3a8;
+    --flame-red-2: #ff7a1f;
+    --flame-red-3: #b31a00;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Cinzel', 'Times New Roman', serif;
+    color: #f1e9d2;
+    background:
+      radial-gradient(ellipse at 50% 110%, #2a1a0b 0%, transparent 55%),
+      radial-gradient(ellipse at 50% -10%, #0a1328 0%, transparent 55%),
+      linear-gradient(180deg, var(--stone-0) 0%, var(--stone-1) 50%, var(--stone-0) 100%);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Stone-wall texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03) 0%, transparent 2%),
+      radial-gradient(circle at 80% 60%, rgba(255,255,255,0.02) 0%, transparent 3%),
+      radial-gradient(circle at 30% 80%, rgba(0,0,0,0.35) 0%, transparent 4%),
+      radial-gradient(circle at 70% 30%, rgba(0,0,0,0.35) 0%, transparent 4%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating embers */
+  .embers {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .ember {
+    position: absolute;
+    bottom: -20px;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--flame-red-2);
+    box-shadow: 0 0 8px var(--flame-red-2), 0 0 16px var(--flame-red-1);
+    opacity: 0;
+    animation: rise linear infinite;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-110vh) translateX(var(--drift, 20px)); opacity: 0; }
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  header.hall {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  header.hall .eyebrow {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  header.hall h1 {
+    font-weight: 900;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 0.08em;
+    color: var(--gold-bright);
+    text-shadow:
+      0 0 12px rgba(255, 180, 60, 0.35),
+      0 0 40px rgba(255, 120, 20, 0.2),
+      0 4px 8px rgba(0,0,0,0.6);
+    margin: 8px 0 12px;
+  }
+  header.hall p.subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #d9cba4;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  /* ====== Goblet ====== */
+  .stage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 24px 0 8px;
+    position: relative;
+    min-height: 420px;
+  }
+  .goblet-wrap {
+    position: relative;
+    width: 280px;
+    height: 400px;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
+  }
+
+  /* Flame stack sits ABOVE goblet bowl */
+  .flames {
+    position: absolute;
+    left: 50%;
+    top: -30px;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 260px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .flame {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform-origin: bottom center;
+    border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+    mix-blend-mode: screen;
+    filter: blur(2px);
+    animation: flicker 1.6s ease-in-out infinite alternate;
+  }
+  .flame.f1 {
+    width: 180px; height: 220px;
+    margin-left: -90px;
+    background: radial-gradient(ellipse at 50% 90%, var(--flame-blue-1) 0%, var(--flame-blue-2) 40%, var(--flame-blue-3) 75%, transparent 100%);
+    animation-duration: 1.9s;
+    opacity: 0.95;
+  }
+  .flame.f2 {
+    width: 130px; height: 170px;
+    margin-left: -65px;
+    background: radial-gradient(ellipse at 50% 90%, #eaf8ff 0%, var(--flame-blue-1) 45%, var(--flame-blue-2) 80%, transparent 100%);
+    animation-duration: 1.3s;
+    animation-delay: 0.2s;
+  }
+  .flame.f3 {
+    width: 70px; height: 110px;
+    margin-left: -35px;
+    background: radial-gradient(ellipse at 50% 90%, #ffffff 0%, #e3f6ff 60%, var(--flame-blue-1) 100%);
+    animation-duration: 0.9s;
+    animation-delay: 0.4s;
+  }
+  @keyframes flicker {
+    0%   { transform: translateX(-4px) scaleY(1)   scaleX(1);   opacity: 0.85; }
+    30%  { transform: translateX(3px)  scaleY(1.08) scaleX(0.95); opacity: 1; }
+    60%  { transform: translateX(-2px) scaleY(0.94) scaleX(1.05); opacity: 0.9; }
+    100% { transform: translateX(4px)  scaleY(1.05) scaleX(0.97); opacity: 0.95; }
+  }
+
+  /* Flame mode: red/gold when picking */
+  .goblet-wrap.picking .flame.f1 {
+    background: radial-gradient(ellipse at 50% 90%, var(--flame-red-1) 0%, var(--flame-red-2) 45%, var(--flame-red-3) 80%, transparent 100%);
+    width: 240px; height: 300px; margin-left: -120px;
+  }
+  .goblet-wrap.picking .flame.f2 {
+    background: radial-gradient(ellipse at 50% 90%, #fffbe0 0%, #ffcc33 45%, var(--flame-red-2) 85%, transparent 100%);
+    width: 170px; height: 220px; margin-left: -85px;
+  }
+  .goblet-wrap.picking .flame.f3 {
+    background: radial-gradient(ellipse at 50% 90%, #ffffff 0%, #fff3a8 60%, #ff9a3c 100%);
+    width: 90px; height: 140px; margin-left: -45px;
+  }
+  .goblet-wrap.picking { animation: shake 0.12s linear infinite; }
+  @keyframes shake {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-2px, 1px); }
+    50%  { transform: translate(2px, -1px); }
+    75%  { transform: translate(-1px, 2px); }
+    100% { transform: translate(1px, -2px); }
+  }
+
+  /* Goblet SVG */
+  .goblet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Glow behind goblet */
+  .stage::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(79, 195, 247, 0.35) 0%, rgba(14, 79, 138, 0.15) 40%, transparent 70%);
+    filter: blur(30px);
+    pointer-events: none;
+    z-index: 1;
+    animation: glow 4s ease-in-out infinite alternate;
+  }
+  .goblet-wrap.picking ~ .stage-glow,
+  body.picking .stage::before {
+    background: radial-gradient(circle, rgba(255, 122, 31, 0.5) 0%, rgba(179, 26, 0, 0.2) 40%, transparent 70%);
+  }
+  @keyframes glow {
+    0%   { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 1;   transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  /* ====== Panels ====== */
+  .panels {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+  }
+  @media (max-width: 880px) {
+    .panels { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background:
+      linear-gradient(180deg, rgba(20, 24, 40, 0.75) 0%, rgba(10, 12, 22, 0.85) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 140, 0.08),
+      0 10px 30px rgba(0,0,0,0.5);
+  }
+  .panel h2 {
+    font-size: 18px;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .panel h2 .rune {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #c7b07a;
+    text-transform: none;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-left: 8px;
+  }
+
+  /* ====== Parchment ====== */
+  .parchment {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 50%, var(--parchment) 0%, #d8c28e 70%, #b8955a 100%);
+    padding: 32px 28px 26px;
+    border-radius: 4px;
+    color: var(--ink);
+    font-family: 'IM Fell English', serif;
+    box-shadow:
+      inset 0 0 60px rgba(139, 99, 57, 0.35),
+      inset 0 0 8px rgba(90, 63, 34, 0.4),
+      0 8px 24px rgba(0,0,0,0.5);
+    /* deckled edges */
+    clip-path: polygon(
+      0% 6%, 2% 2%, 8% 4%, 15% 0%, 25% 3%, 40% 1%, 55% 4%, 70% 1%, 85% 3%, 92% 0%, 100% 4%,
+      98% 10%, 100% 20%, 97% 35%, 100% 50%, 98% 65%, 100% 80%, 97% 92%, 100% 100%,
+      90% 98%, 75% 100%, 60% 97%, 45% 100%, 30% 97%, 15% 100%, 5% 97%, 0% 100%,
+      3% 85%, 0% 70%, 2% 55%, 0% 40%, 3% 25%, 0% 12%
+    );
+  }
+  .parchment::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(90, 63, 34, 0.18) 0%, transparent 3%),
+      radial-gradient(circle at 80% 75%, rgba(90, 63, 34, 0.22) 0%, transparent 4%),
+      radial-gradient(circle at 60% 30%, rgba(90, 63, 34, 0.12) 0%, transparent 2%);
+    pointer-events: none;
+  }
+  .parchment label {
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: #6b4a22;
+    margin-bottom: 8px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .parchment input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px dashed rgba(90, 63, 34, 0.5);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+    padding: 8px 0 10px;
+    outline: none;
+  }
+  .parchment input::placeholder { color: rgba(90, 63, 34, 0.45); font-style: italic; }
+  .parchment input:focus { border-bottom-color: #5a3f22; }
+  .parchment .hint {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #6b4a22;
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 13px;
+    padding: 14px 24px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    border: 1px solid transparent;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: linear-gradient(180deg, #e9c975 0%, #b8943a 100%);
+    color: #2a1d05;
+    border-color: #8a6a22;
+    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .btn-primary:hover { box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255,255,255,0.5); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--gold);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+  .btn-ghost:hover { background: rgba(212, 175, 55, 0.08); }
+  .btn-danger {
+    background: transparent;
+    color: #ff7a6a;
+    border-color: rgba(255, 122, 106, 0.5);
+  }
+  .btn-danger:hover { background: rgba(255, 122, 106, 0.08); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ====== Champion list ====== */
+  .champions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 440px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .champions::-webkit-scrollbar { width: 6px; }
+  .champions::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 3px; }
+
+  .champion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(233, 213, 166, 0.95) 0%, rgba(216, 194, 142, 0.95) 100%);
+    color: var(--ink);
+    border-radius: 3px;
+    font-family: 'IM Fell English', serif;
+    font-size: 19px;
+    font-style: italic;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 0 20px rgba(139, 99, 57, 0.2);
+    animation: enterSlip 0.45s ease-out both;
+    position: relative;
+  }
+  .champion .seal {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #c8310a 0%, #7a1c00 80%);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .champion .name { flex: 1; }
+  .champion .remove {
+    background: transparent;
+    border: none;
+    color: rgba(90, 63, 34, 0.55);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .champion .remove:hover { color: #8a1800; }
+  @keyframes enterSlip {
+    from { opacity: 0; transform: translateY(-8px) rotate(-1deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(0); }
+  }
+  .champion.burning {
+    animation: burnAway 0.8s ease-in forwards;
+  }
+  @keyframes burnAway {
+    0%   { opacity: 1; filter: brightness(1); }
+    40%  { filter: brightness(1.4) sepia(0.5); transform: scale(1.02); }
+    100% { opacity: 0; filter: brightness(0.3) sepia(1) hue-rotate(-30deg); transform: scale(0.6) rotate(4deg); }
+  }
+
+  .count-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+  }
+  .count-row .count {
+    font-family: 'IM Fell English', serif;
+    color: #c7b07a;
+    font-style: italic;
+  }
+  .count-row .count strong {
+    color: var(--gold-bright);
+    font-weight: 900;
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    margin-right: 4px;
+  }
+
+  .empty {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(231, 221, 190, 0.5);
+    text-align: center;
+    padding: 32px 12px;
+  }
+
+  /* ====== Draw controls ====== */
+  .draw-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn-champion {
+    font-size: 15px;
+    padding: 18px 36px;
+    background: linear-gradient(180deg, #ffe37a 0%, #d4a225 60%, #a07014 100%);
+    color: #2a1d05;
+    border-color: #6a4d14;
+    box-shadow: 0 8px 28px rgba(255, 180, 60, 0.45), inset 0 1px 0 rgba(255,255,255,0.5);
+    letter-spacing: 0.18em;
+  }
+  .btn-champion:hover {
+    box-shadow: 0 12px 40px rgba(255, 180, 60, 0.65), inset 0 1px 0 rgba(255,255,255,0.6);
+    transform: translateY(-1px);
+  }
+
+  /* ====== Winner reveal modal ====== */
+  .reveal {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(60, 20, 0, 0.6) 0%, rgba(0,0,0,0.92) 70%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .reveal.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .winner-scroll {
+    position: relative;
+    max-width: 640px;
+    width: 92%;
+    padding: 48px 56px 40px;
+    background:
+      radial-gradient(ellipse at 50% 50%, var(--parchment) 0%, #d8c28e 70%, #b8955a 100%);
+    color: var(--ink);
+    font-family: 'IM Fell English', serif;
+    text-align: center;
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 80px rgba(139, 99, 57, 0.4),
+      0 0 120px rgba(255, 180, 60, 0.4),
+      0 20px 60px rgba(0,0,0,0.6);
+    clip-path: polygon(
+      0% 4%, 3% 1%, 10% 3%, 20% 0%, 35% 2%, 50% 0%, 65% 3%, 80% 1%, 92% 3%, 100% 2%,
+      98% 15%, 100% 30%, 97% 50%, 100% 70%, 98% 88%, 100% 98%,
+      90% 100%, 75% 98%, 55% 100%, 35% 98%, 15% 100%, 3% 98%,
+      0% 85%, 2% 60%, 0% 40%, 3% 20%
+    );
+    transform: scale(0.4) rotate(-6deg);
+    opacity: 0;
+    animation: scrollIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+  }
+  @keyframes scrollIn {
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .winner-scroll .eyebrow {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    font-size: 12px;
+    color: #6b4a22;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .winner-scroll h2 {
+    font-family: 'IM Fell English', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 16px;
+    color: #5a3f22;
+    margin-bottom: 16px;
+  }
+  .winner-name {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(40px, 7vw, 72px);
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin: 8px 0 22px;
+    text-shadow: 0 0 20px rgba(255, 200, 80, 0.3);
+    animation: nameGlow 2.5s ease-in-out infinite alternate;
+  }
+  @keyframes nameGlow {
+    from { text-shadow: 0 0 20px rgba(255, 200, 80, 0.25); }
+    to   { text-shadow: 0 0 36px rgba(255, 200, 80, 0.55), 0 0 60px rgba(255, 140, 30, 0.3); }
+  }
+  .winner-scroll .flourish {
+    color: #8a6a22;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+  .winner-scroll .close-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .winner-scroll .close-row .btn-ghost {
+    color: #6b4a22;
+    border-color: rgba(107, 74, 34, 0.45);
+  }
+  .winner-scroll .close-row .btn-ghost:hover { background: rgba(107, 74, 34, 0.08); }
+  .winner-scroll .close-row .btn-primary {
+    background: linear-gradient(180deg, #c8310a 0%, #7a1c00 100%);
+    color: #fff3e0;
+    border-color: #5a1300;
+  }
+
+  /* Parchment flying into goblet */
+  .flying-parchment {
+    position: fixed;
+    width: 180px;
+    height: 90px;
+    background:
+      radial-gradient(ellipse at 50% 50%, var(--parchment) 0%, #d8c28e 80%, #b8955a 100%);
+    color: var(--ink);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    text-align: center;
+    border-radius: 3px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    z-index: 8;
+    pointer-events: none;
+    transition: all 0.9s cubic-bezier(0.55, 0.1, 0.9, 0.6);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 48px;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(231, 221, 190, 0.4);
+    font-size: 13px;
+  }
+
+  .screen-flash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 200, 80, 0.8) 0%, transparent 60%);
+    z-index: 9;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .screen-flash.on { opacity: 1; }
+
+  /* ====== Admin-only visibility ====== */
+  body:not(.admin) .admin-only { display: none !important; }
+  body.admin .public-only { display: none !important; }
+
+  .admin-badge {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 5;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #2a1d05;
+    background: linear-gradient(180deg, #ffe37a 0%, #d4a225 100%);
+    padding: 8px 14px;
+    border-radius: 100px;
+    border: 1px solid #8a6a22;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+  }
+
+  .awaiting {
+    text-align: center;
+    margin-top: 28px;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #c7b07a;
+    letter-spacing: 0.06em;
+    opacity: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .awaiting-rune { color: var(--gold); font-size: 14px; }
+
+  .keeper-card {
+    text-align: center;
+    padding: 16px 12px 8px;
+  }
+  .keeper-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .big-count {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(72px, 14vw, 128px);
+    color: var(--gold-bright);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-shadow:
+      0 0 24px rgba(255, 200, 80, 0.35),
+      0 0 60px rgba(255, 140, 30, 0.2),
+      0 6px 14px rgba(0,0,0,0.6);
+    margin: 8px 0 12px;
+    animation: countPulse 3s ease-in-out infinite alternate;
+  }
+  @keyframes countPulse {
+    from { text-shadow: 0 0 20px rgba(255, 200, 80, 0.3), 0 6px 14px rgba(0,0,0,0.6); }
+    to   { text-shadow: 0 0 40px rgba(255, 200, 80, 0.55), 0 0 80px rgba(255, 140, 30, 0.3), 0 6px 14px rgba(0,0,0,0.6); }
+  }
+  .keeper-sub {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #d9cba4;
+    margin-bottom: 22px;
+  }
+  .keeper-lore {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: #a99772;
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 360px;
+    margin: 0 auto;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(212, 175, 55, 0.2);
+  }
+
+  /* ====== Countdown ====== */
+  .countdown {
+    margin: 32px auto 8px;
+    max-width: 720px;
+    padding: 24px 28px;
+    text-align: center;
+    background:
+      linear-gradient(180deg, rgba(20, 24, 40, 0.6) 0%, rgba(10, 12, 22, 0.7) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 220, 140, 0.06), 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .countdown .eyebrow {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .countdown-clock {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .clock-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 68px;
+  }
+  .clock-unit .num {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(32px, 6vw, 52px);
+    color: var(--gold-bright);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 16px rgba(255, 200, 80, 0.25), 0 4px 8px rgba(0,0,0,0.5);
+    font-variant-numeric: tabular-nums;
+  }
+  .clock-unit .lbl {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #a99772;
+    margin-top: 6px;
+  }
+  .clock-colon {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(32px, 6vw, 52px);
+    color: var(--gold);
+    opacity: 0.5;
+    line-height: 1;
+    transform: translateY(-10px);
+  }
+  .countdown-sub {
+    margin-top: 14px;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #a99772;
+  }
+  .countdown.done .clock-unit .num { color: #ff9a3c; text-shadow: 0 0 24px rgba(255, 122, 31, 0.5); }
+  .countdown.done .eyebrow { color: #ff9a3c; }
+
+  /* ====== Admin draw-time scheduler ====== */
+  .schedule {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .schedule input[type="datetime-local"] {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    background: rgba(10, 12, 22, 0.7);
+    color: var(--gold-bright);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 6px;
+    outline: none;
+    color-scheme: dark;
+  }
+  .schedule input[type="datetime-local"]:focus { border-color: var(--gold); }
+  .schedule .btn { padding: 10px 18px; font-size: 11px; }
+
+  /* ====== Setup banner (admin, when Supabase not configured) ====== */
+  .setup-banner {
+    max-width: 720px;
+    margin: 20px auto 0;
+    padding: 14px 18px;
+    background: rgba(255, 200, 80, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    font-family: 'IM Fell English', serif;
+    font-size: 14px;
+    color: #d9cba4;
+    text-align: center;
+    font-style: italic;
+  }
+  .setup-banner strong { color: var(--gold-bright); font-style: normal; font-family: 'Cinzel', serif; font-weight: 700; }
+  .setup-banner code { font-family: 'Menlo', 'Monaco', monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; color: var(--gold-bright); font-size: 12px; font-style: normal; }
+
+  /* Shrink draw button when countdown still running */
+  .draw-row.locked .btn-champion { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+  <div class="embers" id="embers" aria-hidden="true"></div>
+  <div class="screen-flash" id="flash" aria-hidden="true"></div>
+  <div class="admin-badge admin-only" aria-hidden="true">⚜ Headmaster's View</div>
+
+  <main>
+    <header class="hall">
+      <div class="eyebrow">— The Triwizard Selection —</div>
+      <h1>The Goblet of Fire</h1>
+      <p class="subtitle">
+        Write your name upon the parchment and cast it into the goblet.
+        When the moment arrives, the flames shall choose a champion.
+      </p>
+    </header>
+
+    <section class="stage" aria-label="The Goblet of Fire">
+      <div class="goblet-wrap" id="gobletWrap">
+        <div class="flames">
+          <div class="flame f1"></div>
+          <div class="flame f2"></div>
+          <div class="flame f3"></div>
+        </div>
+        <svg class="goblet" viewBox="0 0 280 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"  stop-color="#5a3f22" />
+              <stop offset="30%" stop-color="#a67c52" />
+              <stop offset="50%" stop-color="#c9a76a" />
+              <stop offset="70%" stop-color="#a67c52" />
+              <stop offset="100%" stop-color="#5a3f22" />
+            </linearGradient>
+            <linearGradient id="bronzeDark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"  stop-color="#3a2a14" />
+              <stop offset="50%" stop-color="#7a5a2e" />
+              <stop offset="100%" stop-color="#3a2a14" />
+            </linearGradient>
+            <radialGradient id="bowlInner" cx="50%" cy="20%" r="70%">
+              <stop offset="0%"  stop-color="#1a0a00" />
+              <stop offset="60%" stop-color="#2a1505" />
+              <stop offset="100%" stop-color="#0a0400" />
+            </radialGradient>
+          </defs>
+
+          <!-- Bowl rim -->
+          <ellipse cx="140" cy="80" rx="110" ry="18" fill="url(#bronze)" />
+          <ellipse cx="140" cy="78" rx="100" ry="12" fill="url(#bowlInner)" />
+
+          <!-- Bowl body -->
+          <path d="M 30 82 Q 30 180 90 200 L 190 200 Q 250 180 250 82 Z" fill="url(#bronze)" />
+          <path d="M 40 90 Q 42 170 95 188 L 185 188 Q 238 170 240 90 Z" fill="url(#bronzeDark)" opacity="0.5" />
+
+          <!-- Engraved band -->
+          <rect x="35" y="140" width="210" height="16" fill="url(#bronzeDark)" opacity="0.7" />
+          <g fill="#c9a76a" opacity="0.6" font-family="IM Fell English" font-style="italic" font-size="11">
+            <text x="50" y="152">✦ Fortius Quo Fidelius ✦ Ignis Eligit ✦</text>
+          </g>
+
+          <!-- Stem -->
+          <path d="M 120 200 L 110 260 L 170 260 L 160 200 Z" fill="url(#bronze)" />
+          <circle cx="140" cy="230" r="16" fill="url(#bronze)" stroke="#5a3f22" stroke-width="1.5" />
+          <circle cx="140" cy="230" r="8" fill="url(#bronzeDark)" />
+
+          <!-- Base -->
+          <path d="M 95 260 L 185 260 L 200 285 L 80 285 Z" fill="url(#bronze)" />
+          <ellipse cx="140" cy="290" rx="80" ry="12" fill="url(#bronze)" />
+          <ellipse cx="140" cy="295" rx="95" ry="10" fill="url(#bronzeDark)" />
+          <ellipse cx="140" cy="300" rx="100" ry="8" fill="url(#bronze)" />
+
+          <!-- Highlights -->
+          <path d="M 50 95 Q 55 160 95 185" stroke="#eacd8a" stroke-width="2" fill="none" opacity="0.5" />
+          <path d="M 230 95 Q 225 160 185 185" stroke="#3a2a14" stroke-width="2" fill="none" opacity="0.6" />
+        </svg>
+      </div>
+    </section>
+
+    <div class="countdown" id="countdown" style="display:none;" aria-live="polite">
+      <div class="eyebrow" id="countdownEyebrow">The Selection Begins In</div>
+      <div class="countdown-clock" id="countdownClock">
+        <div class="clock-unit"><span class="num" id="cdDays">00</span><span class="lbl">Days</span></div>
+        <span class="clock-colon">:</span>
+        <div class="clock-unit"><span class="num" id="cdHours">00</span><span class="lbl">Hours</span></div>
+        <span class="clock-colon">:</span>
+        <div class="clock-unit"><span class="num" id="cdMins">00</span><span class="lbl">Minutes</span></div>
+        <span class="clock-colon">:</span>
+        <div class="clock-unit"><span class="num" id="cdSecs">00</span><span class="lbl">Seconds</span></div>
+      </div>
+      <div class="countdown-sub" id="countdownSub">until the goblet makes its choice</div>
+    </div>
+
+    <div class="awaiting public-only" id="awaitingMsg" aria-live="polite">
+      <span class="awaiting-rune">✦</span>
+      <span id="awaitingText">The flames await the appointed hour</span>
+      <span class="awaiting-rune">✦</span>
+    </div>
+
+    <div class="draw-row admin-only" id="drawRow">
+      <button class="btn btn-champion" id="drawBtn" type="button">✦ Select the Champion ✦</button>
+    </div>
+
+    <div class="schedule admin-only" aria-label="Schedule draw time">
+      <span>Draw time:</span>
+      <input type="datetime-local" id="drawAtInput" />
+      <button class="btn btn-ghost" id="setDrawAtBtn" type="button">Set</button>
+      <button class="btn btn-ghost" id="clearDrawAtBtn" type="button">Clear</button>
+    </div>
+
+    <div class="setup-banner admin-only" id="setupBanner" style="display:none;">
+      <strong>Local storage mode.</strong> Names are per-browser. For shared team play, open
+      <code>supabase-setup.sql</code> and follow the setup instructions, then fill in
+      <code>CONFIG</code> at the top of this file.
+    </div>
+
+    <section class="panels">
+      <div class="panel" aria-label="Parchment and quill">
+        <h2>Cast Your Name <span class="rune">— write thy name upon the scroll</span></h2>
+        <form class="parchment" id="castForm" autocomplete="off">
+          <label for="nameInput">Champion's name</label>
+          <input id="nameInput" type="text" maxlength="60" placeholder="Harry Potter" required />
+          <div class="hint">↩ Press Enter, or cast it into the flames below.</div>
+        </form>
+        <div class="actions">
+          <button class="btn btn-primary" id="castBtn" type="button">↟ Cast into the Goblet</button>
+          <button class="btn btn-ghost" id="clearInputBtn" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="panel" aria-label="The Goblet's keeping">
+        <div class="public-only keeper-card">
+          <div class="keeper-eyebrow">The Goblet Keeps</div>
+          <div class="big-count" id="countNumPublic">0</div>
+          <div class="keeper-sub">names within the flame</div>
+          <div class="keeper-lore">
+            Their identities are guarded by the blue fire. When the appointed hour comes, the goblet itself shall name the champion.
+          </div>
+        </div>
+        <div class="admin-only">
+          <h2>Champions Enrolled <span class="rune">— whose names the goblet keeps</span></h2>
+          <div class="count-row">
+            <div class="count"><strong id="countNum">0</strong> names within the flame</div>
+            <button class="btn btn-danger" id="clearAllBtn" type="button" style="padding: 8px 16px; font-size: 11px;">Empty the Goblet</button>
+          </div>
+          <div class="champions" id="championsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      An enchantment for the HRS Keycard Tournament · March 2026
+    </footer>
+  </main>
+
+  <div class="reveal" id="reveal" role="dialog" aria-modal="true" aria-labelledby="winnerLabel">
+    <div class="winner-scroll">
+      <div class="eyebrow">The Goblet has chosen</div>
+      <h2 id="winnerLabel">The Champion is...</h2>
+      <div class="winner-name" id="winnerName">—</div>
+      <div class="flourish">✦ ✦ ✦</div>
+      <div class="close-row">
+        <button class="btn btn-ghost" id="closeReveal" type="button">Close</button>
+        <button class="btn btn-primary" id="burnWinner" type="button">Remove from Goblet</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+// ============================================================
+// CONFIG — fill these in to share the goblet across your team.
+// Leave blank to run in local (per-browser) mode.
+// See supabase-setup.sql for instructions.
+// ============================================================
+const CONFIG = {
+  supabaseUrl:     'https://shhcoikoyhznxymgpzdi.supabase.co',
+  supabaseAnonKey: 'sb_publishable_wdEjBylRhI8S-FOon1c3xQ_9fua7NkN',
+};
+// Admin key: supplied via URL as ?admin=1&key=YOUR_KEY (not hardcoded).
+// ============================================================
+
+(async () => {
+  const url = new URL(location.href);
+  const isAdmin  = url.searchParams.get('admin') === '1';
+  const adminKey = url.searchParams.get('key') || localStorage.getItem('goblet.adminKey') || '';
+  if (isAdmin && adminKey) localStorage.setItem('goblet.adminKey', adminKey);
+  if (isAdmin) document.body.classList.add('admin');
+
+  const useSupabase = !!(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey);
+
+  const $ = (id) => document.getElementById(id);
+  const nameInput   = $('nameInput');
+  const castBtn     = $('castBtn');
+  const clearInput  = $('clearInputBtn');
+  const castForm    = $('castForm');
+  const list        = $('championsList');
+  const countNum    = $('countNum');
+  const countNumPub = $('countNumPublic');
+  const clearAllBtn = $('clearAllBtn');
+  const drawBtn     = $('drawBtn');
+  const drawRow     = $('drawRow');
+  const gobletWrap  = $('gobletWrap');
+  const reveal      = $('reveal');
+  const winnerName  = $('winnerName');
+  const closeReveal = $('closeReveal');
+  const burnWinner  = $('burnWinner');
+  const flash       = $('flash');
+  const embersBox   = $('embers');
+  const countdown   = $('countdown');
+  const awaitingMsg = $('awaitingMsg');
+  const awaitingTxt = $('awaitingText');
+  const setupBanner = $('setupBanner');
+  const drawAtInput = $('drawAtInput');
+  const setDrawAtBtn = $('setDrawAtBtn');
+  const clearDrawAtBtn = $('clearDrawAtBtn');
+
+  // ---- Embers
+  function spawnEmbers(n = 40) {
+    for (let i = 0; i < n; i++) {
+      const e = document.createElement('div');
+      e.className = 'ember';
+      e.style.left = Math.random() * 100 + 'vw';
+      e.style.animationDuration = (6 + Math.random() * 8) + 's';
+      e.style.animationDelay = (Math.random() * 10) + 's';
+      e.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+      e.style.width = e.style.height = (2 + Math.random() * 3) + 'px';
+      embersBox.appendChild(e);
+    }
+  }
+  spawnEmbers();
+
+  // ============================================================
+  // Storage backend — local (per-browser) or Supabase (shared)
+  // ============================================================
+  function localBackend() {
+    const ENTRIES_KEY = 'goblet.champions.v1';
+    const SETTINGS_KEY = 'goblet.settings.v1';
+    const readArr  = () => { try { const v = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
+    const readSet  = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; } };
+    const writeArr = (a) => localStorage.setItem(ENTRIES_KEY, JSON.stringify(a));
+    const writeSet = (s) => localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    return {
+      kind: 'local',
+      async status() {
+        const arr = readArr(), s = readSet();
+        return { count: arr.length, drawAt: s.drawAt || null, winnerName: s.winnerName || null };
+      },
+      async cast(name) {
+        const n = (name || '').trim().replace(/\s+/g, ' ');
+        if (!n) return;
+        const arr = readArr();
+        if (arr.some(x => x.toLowerCase() === n.toLowerCase())) return;
+        arr.push(n); writeArr(arr);
+      },
+      async adminList() {
+        return readArr().map((name, i) => ({ id: String(i), name }));
+      },
+      async adminRemove(id) {
+        const arr = readArr();
+        const idx = parseInt(id, 10);
+        if (!isNaN(idx)) { arr.splice(idx, 1); writeArr(arr); }
+      },
+      async adminEmpty() {
+        writeArr([]);
+        const s = readSet(); s.winnerName = null; writeSet(s);
+      },
+      async adminSetDrawAt(iso) {
+        const s = readSet(); s.drawAt = iso; s.winnerName = null; writeSet(s);
+      },
+      async adminDraw() {
+        const arr = readArr();
+        if (!arr.length) throw new Error('no entries');
+        const w = arr[Math.floor(Math.random() * arr.length)];
+        const s = readSet(); s.winnerName = w; writeSet(s);
+        return w;
+      },
+    };
+  }
+
+  async function supabaseBackend() {
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.45.0');
+    const sb = createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, {
+      auth: { persistSession: false },
+    });
+    const unwrap = ({ data, error }) => { if (error) throw error; return data; };
+    return {
+      kind: 'supabase',
+      sb,
+      async status() {
+        const d = unwrap(await sb.rpc('goblet_status'));
+        return { count: d?.count ?? 0, drawAt: d?.draw_at ?? null, winnerName: d?.winner_name ?? null };
+      },
+      async cast(name) { unwrap(await sb.rpc('goblet_cast', { p_name: name })); },
+      async adminList() { return unwrap(await sb.rpc('goblet_admin_list', { p_key: adminKey })) || []; },
+      async adminRemove(id) { unwrap(await sb.rpc('goblet_admin_remove', { p_key: adminKey, p_id: id })); },
+      async adminEmpty() { unwrap(await sb.rpc('goblet_admin_empty', { p_key: adminKey })); },
+      async adminSetDrawAt(iso) { unwrap(await sb.rpc('goblet_admin_set_draw_time', { p_key: adminKey, p_draw_at: iso })); },
+      async adminDraw() { return unwrap(await sb.rpc('goblet_admin_draw', { p_key: adminKey })); },
+    };
+  }
+
+  const backend = useSupabase ? await supabaseBackend() : localBackend();
+  if (isAdmin && backend.kind === 'local') setupBanner.style.display = 'block';
+
+  // ============================================================
+  // State + rendering
+  // ============================================================
+  let state = { count: 0, drawAt: null, winnerName: null };
+  let adminEntries = [];
+  let shownWinner = null; // track what the reveal modal is currently displaying
+
+  async function refresh() {
+    try {
+      state = await backend.status();
+    } catch (err) {
+      console.error('status error', err);
+    }
+    if (isAdmin) {
+      try { adminEntries = await backend.adminList(); }
+      catch (err) { adminEntries = []; if (err?.message !== 'unauthorized') console.error('list error', err); }
+    }
+    render();
+  }
+
+  function render() {
+    if (countNum)    countNum.textContent    = state.count;
+    if (countNumPub) countNumPub.textContent = state.count;
+
+    drawBtn.disabled = state.count < 1;
+
+    // Admin list
+    if (isAdmin) {
+      list.innerHTML = '';
+      if (!adminEntries.length) {
+        list.innerHTML = '<div class="empty">The goblet awaits its first champion...</div>';
+      } else {
+        adminEntries.forEach((e) => {
+          const row = document.createElement('div');
+          row.className = 'champion';
+          row.innerHTML = `
+            <div class="seal" aria-hidden="true"></div>
+            <div class="name"></div>
+            <button class="remove" title="Remove" aria-label="Remove">✕</button>
+          `;
+          row.querySelector('.name').textContent = e.name;
+          row.querySelector('.remove').addEventListener('click', async () => {
+            row.classList.add('burning');
+            setTimeout(async () => { await backend.adminRemove(e.id); await refresh(); }, 500);
+          });
+          list.appendChild(row);
+        });
+      }
+    }
+
+    // Countdown + messaging
+    updateCountdown();
+
+    // Winner reveal on load (idempotent — only if new)
+    if (state.winnerName && state.winnerName !== shownWinner) {
+      shownWinner = state.winnerName;
+      showWinner(state.winnerName);
+    }
+  }
+
+  function fmtLocalDatetime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  // ============================================================
+  // Countdown
+  // ============================================================
+  let cdTimer = null;
+  function updateCountdown() {
+    if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+
+    if (!state.drawAt) {
+      countdown.style.display = 'none';
+      drawRow.classList.remove('locked');
+      if (awaitingTxt) awaitingTxt.textContent = 'The flames await the appointed hour';
+      if (isAdmin && drawAtInput) drawAtInput.value = '';
+      return;
+    }
+
+    if (isAdmin && drawAtInput && !drawAtInput.value) {
+      drawAtInput.value = fmtLocalDatetime(state.drawAt);
+    }
+
+    countdown.style.display = 'block';
+
+    const target = new Date(state.drawAt).getTime();
+    const tick = () => {
+      const now = Date.now();
+      const diff = target - now;
+      if (diff <= 0) {
+        countdown.classList.add('done');
+        $('countdownEyebrow').textContent = state.winnerName ? 'The Champion Has Been Chosen' : 'The Hour Has Come';
+        $('cdDays').textContent  = '00';
+        $('cdHours').textContent = '00';
+        $('cdMins').textContent  = '00';
+        $('cdSecs').textContent  = '00';
+        $('countdownSub').textContent = state.winnerName ? '✦ ✦ ✦' : 'The goblet stirs...';
+        drawRow.classList.remove('locked');
+        if (awaitingTxt) awaitingTxt.textContent = state.winnerName
+          ? 'The goblet has spoken'
+          : 'The goblet stirs — the champion shall be revealed';
+        if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+        return;
+      }
+      countdown.classList.remove('done');
+      $('countdownEyebrow').textContent = 'The Selection Begins In';
+      $('countdownSub').textContent = 'until the goblet makes its choice';
+      const s = Math.floor(diff / 1000);
+      const days  = Math.floor(s / 86400);
+      const hours = Math.floor((s % 86400) / 3600);
+      const mins  = Math.floor((s % 3600) / 60);
+      const secs  = s % 60;
+      const pad = (n) => String(n).padStart(2, '0');
+      $('cdDays').textContent  = pad(days);
+      $('cdHours').textContent = pad(hours);
+      $('cdMins').textContent  = pad(mins);
+      $('cdSecs').textContent  = pad(secs);
+      drawRow.classList.add('locked');
+      if (awaitingTxt) awaitingTxt.textContent = 'The flames await the appointed hour';
+    };
+    tick();
+    cdTimer = setInterval(tick, 1000);
+  }
+
+  function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+
+  async function addName(raw) {
+    const name = (raw || '').trim().replace(/\s+/g, ' ');
+    if (!name) return false;
+    try { await backend.cast(name); }
+    catch (err) { console.error('cast error', err); return false; }
+    await refresh();
+    return true;
+  }
+
+  function nudgeParchment(msg) {
+    const hint = document.querySelector('.parchment .hint');
+    if (!hint) return;
+    const old = hint.textContent;
+    hint.textContent = msg;
+    hint.style.color = '#8a1800';
+    setTimeout(() => { hint.textContent = old; hint.style.color = ''; }, 1800);
+  }
+
+  // ---- Cast animation: parchment flies from input to goblet
+  function castAnimation(name) {
+    const inputRect = nameInput.getBoundingClientRect();
+    const gobletRect = gobletWrap.getBoundingClientRect();
+
+    const p = document.createElement('div');
+    p.className = 'flying-parchment';
+    p.textContent = name;
+    p.style.left = (inputRect.left + inputRect.width / 2 - 90) + 'px';
+    p.style.top  = (inputRect.top - 10) + 'px';
+    p.style.transform = 'rotate(-6deg) scale(1)';
+    document.body.appendChild(p);
+
+    // Force layout then animate
+    requestAnimationFrame(() => {
+      const targetX = gobletRect.left + gobletRect.width / 2 - 90;
+      const targetY = gobletRect.top + 30;
+      p.style.left = targetX + 'px';
+      p.style.top  = targetY + 'px';
+      p.style.transform = 'rotate(40deg) scale(0.2)';
+      p.style.opacity = '0.2';
+    });
+
+    setTimeout(() => {
+      p.remove();
+      flareFlames('blue');
+    }, 900);
+  }
+
+  function flareFlames(mode) {
+    const original = gobletWrap.style.transform;
+    gobletWrap.style.transition = 'transform 0.2s ease';
+    gobletWrap.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+      gobletWrap.style.transform = original || '';
+      gobletWrap.style.transition = '';
+    }, 220);
+  }
+
+  // ============================================================
+  // Cast handler
+  // ============================================================
+  async function handleCast() {
+    const val = nameInput.value;
+    if (!val.trim()) { nameInput.focus(); return; }
+    castAnimation(val.trim());         // animate first for snappy feel
+    const ok = await addName(val);
+    if (ok) { nameInput.value = ''; nameInput.focus(); }
+  }
+
+  castBtn.addEventListener('click', handleCast);
+  castForm.addEventListener('submit', (e) => { e.preventDefault(); handleCast(); });
+  clearInput.addEventListener('click', () => { nameInput.value = ''; nameInput.focus(); });
+  clearAllBtn.addEventListener('click', async () => {
+    if (!state.count) return;
+    if (!confirm('Empty the goblet of all names? This cannot be undone.')) return;
+    try { await backend.adminEmpty(); } catch (err) { alert('Unauthorized — check your admin key.'); return; }
+    await refresh();
+  });
+
+  // ============================================================
+  // Draw-time scheduler (admin)
+  // ============================================================
+  if (setDrawAtBtn) {
+    setDrawAtBtn.addEventListener('click', async () => {
+      const v = drawAtInput.value;
+      if (!v) { drawAtInput.focus(); return; }
+      const iso = new Date(v).toISOString();
+      try { await backend.adminSetDrawAt(iso); } catch (err) { alert('Unauthorized — check your admin key.'); return; }
+      await refresh();
+    });
+  }
+  if (clearDrawAtBtn) {
+    clearDrawAtBtn.addEventListener('click', async () => {
+      try { await backend.adminSetDrawAt(null); } catch (err) { alert('Unauthorized — check your admin key.'); return; }
+      drawAtInput.value = '';
+      await refresh();
+    });
+  }
+
+  // ============================================================
+  // Draw winner (admin)
+  // ============================================================
+  let drawing = false;
+  async function drawWinner() {
+    if (drawing) return;
+    if (state.count === 0) return;
+    // Respect the countdown unless admin holds shift to override
+    if (state.drawAt && Date.now() < new Date(state.drawAt).getTime()) {
+      if (!confirm('The appointed hour has not yet arrived. Draw anyway?')) return;
+    }
+    drawing = true;
+    gobletWrap.classList.add('picking');
+    document.body.classList.add('picking');
+
+    await delay(1400);
+    flash.classList.add('on');
+    setTimeout(() => flash.classList.remove('on'), 400);
+
+    let name;
+    try { name = await backend.adminDraw(); }
+    catch (err) {
+      gobletWrap.classList.remove('picking');
+      document.body.classList.remove('picking');
+      drawing = false;
+      alert(err?.message === 'no entries' ? 'The goblet is empty.' : 'Unauthorized — check your admin key.');
+      return;
+    }
+
+    await delay(200);
+    await refresh();                    // state.winnerName updated -> reveal fires via render()
+
+    setTimeout(() => {
+      gobletWrap.classList.remove('picking');
+      document.body.classList.remove('picking');
+      drawing = false;
+    }, 2500);
+  }
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function showWinner(name) {
+    winnerName.textContent = name;
+    reveal.classList.add('show');
+  }
+
+  drawBtn.addEventListener('click', drawWinner);
+
+  closeReveal.addEventListener('click', () => reveal.classList.remove('show'));
+  burnWinner.addEventListener('click', async () => {
+    // Find the entry by name and remove it (admin only)
+    if (!isAdmin) { reveal.classList.remove('show'); return; }
+    const entry = adminEntries.find(e => e.name === shownWinner);
+    reveal.classList.remove('show');
+    if (entry) {
+      try { await backend.adminRemove(entry.id); } catch { /* ignore */ }
+      await refresh();
+    }
+  });
+  reveal.addEventListener('click', (e) => {
+    if (e.target === reveal) reveal.classList.remove('show');
+  });
+
+  // Hide the admin "Remove from Goblet" button for non-admins
+  if (!isAdmin) burnWinner.style.display = 'none';
+
+  // ============================================================
+  // Initial load + live-ish refresh
+  // ============================================================
+  await refresh();
+  nameInput.focus();
+
+  // Poll status so public clients see the winner + countdown updates
+  // even without realtime subscriptions. Supabase backend still benefits
+  // from this because realtime isn't wired yet.
+  setInterval(refresh, 5000);
+})();
+</script>
+</body>
+</html>
