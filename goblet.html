@@ -523,9 +523,38 @@
     display: flex;
     gap: 12px;
     justify-content: center;
+    align-items: center;
     margin-top: 28px;
     flex-wrap: wrap;
   }
+  .draw-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    background: rgba(20, 24, 40, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+    padding: 10px 16px;
+  }
+  .draw-count input {
+    width: 52px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+    color: var(--gold-bright);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    padding: 2px 0;
+  }
+  .draw-count input:focus { border-bottom-color: var(--gold-bright); }
   .btn-champion {
     font-size: 15px;
     padding: 18px 36px;
@@ -600,6 +629,12 @@
     color: #5a3f22;
     margin-bottom: 16px;
   }
+  .winner-names {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0 22px;
+  }
   .winner-name {
     font-family: 'Cinzel', serif;
     font-weight: 900;
@@ -607,9 +642,16 @@
     color: var(--ink);
     letter-spacing: 0.04em;
     line-height: 1.1;
-    margin: 8px 0 22px;
     text-shadow: 0 0 20px rgba(255, 200, 80, 0.3);
     animation: nameGlow 2.5s ease-in-out infinite alternate;
+  }
+  .winner-names.multi .winner-name {
+    font-size: clamp(28px, 5vw, 52px);
+  }
+  .winner-names.multi .winner-name + .winner-name {
+    border-top: 1px dashed rgba(90, 63, 34, 0.35);
+    padding-top: 10px;
+    margin-top: 6px;
   }
   @keyframes nameGlow {
     from { text-shadow: 0 0 20px rgba(255, 200, 80, 0.25); }
@@ -1178,7 +1220,11 @@
     </div>
 
     <div class="draw-row admin-only" id="drawRow">
-      <button class="btn btn-champion" id="drawBtn" type="button">✦ Select the Champion ✦</button>
+      <label class="draw-count" for="drawCount">
+        Champions
+        <input type="number" id="drawCount" min="1" max="50" value="2" />
+      </label>
+      <button class="btn btn-champion" id="drawBtn" type="button">✦ Select the Champions ✦</button>
     </div>
 
     <div class="schedule admin-only" aria-label="Schedule draw time">
@@ -1237,7 +1283,7 @@
     <div class="winner-scroll">
       <div class="eyebrow">The Goblet has chosen</div>
       <h2 id="winnerLabel">The Champion is...</h2>
-      <div class="winner-name" id="winnerName">—</div>
+      <div class="winner-names" id="winnerNamesBox"></div>
       <div class="flourish">✦ ✦ ✦</div>
       <div class="close-row">
         <button class="btn btn-ghost" id="closeReveal" type="button">Close</button>
@@ -1281,7 +1327,9 @@ const CONFIG = {
   const drawRow     = $('drawRow');
   const gobletWrap  = $('gobletWrap');
   const reveal      = $('reveal');
-  const winnerName  = $('winnerName');
+  const winnerNamesBox = $('winnerNamesBox');
+  const winnerLabel = $('winnerLabel');
+  const drawCountInput = $('drawCount');
   const closeReveal = $('closeReveal');
   const burnWinner  = $('burnWinner');
   const flash       = $('flash');
@@ -1338,7 +1386,7 @@ const CONFIG = {
       kind: 'local',
       async status() {
         const arr = readArr(), s = readSet();
-        return { count: arr.length, drawAt: s.drawAt || null, winnerName: s.winnerName || null };
+        return { count: arr.length, drawAt: s.drawAt || null, winnerNames: Array.isArray(s.winnerNames) ? s.winnerNames : [] };
       },
       async cast(name) {
         const n = (name || '').trim().replace(/\s+/g, ' ');
@@ -1357,17 +1405,23 @@ const CONFIG = {
       },
       async adminEmpty() {
         writeArr([]);
-        const s = readSet(); s.winnerName = null; writeSet(s);
+        const s = readSet(); s.winnerNames = null; writeSet(s);
       },
       async adminSetDrawAt(iso) {
-        const s = readSet(); s.drawAt = iso; s.winnerName = null; writeSet(s);
+        const s = readSet(); s.drawAt = iso; s.winnerNames = null; writeSet(s);
       },
-      async adminDraw() {
+      async adminDraw(count = 2) {
         const arr = readArr();
         if (!arr.length) throw new Error('no entries');
-        const w = arr[Math.floor(Math.random() * arr.length)];
-        const s = readSet(); s.winnerName = w; writeSet(s);
-        return w;
+        const n = Math.max(1, Math.min(count | 0, arr.length));
+        const pool = arr.slice();
+        const winners = [];
+        for (let i = 0; i < n; i++) {
+          const idx = Math.floor(Math.random() * pool.length);
+          winners.push(pool.splice(idx, 1)[0]);
+        }
+        const s = readSet(); s.winnerNames = winners; writeSet(s);
+        return winners;
       },
     };
   }
@@ -1383,14 +1437,19 @@ const CONFIG = {
       sb,
       async status() {
         const d = unwrap(await sb.rpc('goblet_status'));
-        return { count: d?.count ?? 0, drawAt: d?.draw_at ?? null, winnerName: d?.winner_name ?? null };
+        const winners = Array.isArray(d?.winner_names) ? d.winner_names
+                      : (d?.winner_name ? [d.winner_name] : []);
+        return { count: d?.count ?? 0, drawAt: d?.draw_at ?? null, winnerNames: winners };
       },
       async cast(name) { unwrap(await sb.rpc('goblet_cast', { p_name: name })); },
       async adminList() { return unwrap(await sb.rpc('goblet_admin_list', { p_key: adminKey })) || []; },
       async adminRemove(id) { unwrap(await sb.rpc('goblet_admin_remove', { p_key: adminKey, p_id: id })); },
       async adminEmpty() { unwrap(await sb.rpc('goblet_admin_empty', { p_key: adminKey })); },
       async adminSetDrawAt(iso) { unwrap(await sb.rpc('goblet_admin_set_draw_time', { p_key: adminKey, p_draw_at: iso })); },
-      async adminDraw() { return unwrap(await sb.rpc('goblet_admin_draw', { p_key: adminKey })); },
+      async adminDraw(count = 2) {
+        const r = unwrap(await sb.rpc('goblet_admin_draw', { p_key: adminKey, p_count: count }));
+        return Array.isArray(r) ? r : (r ? [r] : []);
+      },
     };
   }
 
@@ -1400,9 +1459,9 @@ const CONFIG = {
   // ============================================================
   // State + rendering
   // ============================================================
-  let state = { count: 0, drawAt: null, winnerName: null };
+  let state = { count: 0, drawAt: null, winnerNames: [] };
   let adminEntries = [];
-  let shownWinner = null; // track what the reveal modal is currently displaying
+  let shownWinnersKey = null; // track what the reveal modal is currently displaying
 
   async function refresh() {
     try {
@@ -1451,9 +1510,14 @@ const CONFIG = {
     updateCountdown();
 
     // Winner reveal on load (idempotent — only if new)
-    if (state.winnerName && state.winnerName !== shownWinner) {
-      shownWinner = state.winnerName;
-      showWinner(state.winnerName);
+    if (state.winnerNames && state.winnerNames.length) {
+      const key = state.winnerNames.join('|');
+      if (key !== shownWinnersKey) {
+        shownWinnersKey = key;
+        showWinners(state.winnerNames);
+      }
+    } else {
+      shownWinnersKey = null;
     }
   }
 
@@ -1490,15 +1554,19 @@ const CONFIG = {
       const now = Date.now();
       const diff = target - now;
       if (diff <= 0) {
+        const hasWinners = state.winnerNames && state.winnerNames.length > 0;
+        const plural = hasWinners && state.winnerNames.length > 1;
         countdown.classList.add('done');
-        $('countdownEyebrow').textContent = state.winnerName ? 'The Champion Has Been Chosen' : 'The Hour Has Come';
+        $('countdownEyebrow').textContent = hasWinners
+          ? (plural ? 'The Champions Have Been Chosen' : 'The Champion Has Been Chosen')
+          : 'The Hour Has Come';
         $('cdDays').textContent  = '00';
         $('cdHours').textContent = '00';
         $('cdMins').textContent  = '00';
         $('cdSecs').textContent  = '00';
-        $('countdownSub').textContent = state.winnerName ? '✦ ✦ ✦' : 'The goblet stirs...';
+        $('countdownSub').textContent = hasWinners ? '✦ ✦ ✦' : 'The goblet stirs...';
         drawRow.classList.remove('locked');
-        if (awaitingTxt) awaitingTxt.textContent = state.winnerName
+        if (awaitingTxt) awaitingTxt.textContent = hasWinners
           ? 'The goblet has spoken'
           : 'The goblet stirs — the champion shall be revealed';
         if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
@@ -1628,6 +1696,11 @@ const CONFIG = {
   // Draw winner (admin)
   // ============================================================
   let drawing = false;
+  function getDrawCount() {
+    const raw = parseInt(drawCountInput?.value, 10);
+    if (!Number.isFinite(raw)) return 2;
+    return Math.max(1, Math.min(raw, 50));
+  }
   async function drawWinner() {
     if (drawing) return;
     if (state.count === 0) return;
@@ -1643,8 +1716,9 @@ const CONFIG = {
     flash.classList.add('on');
     setTimeout(() => flash.classList.remove('on'), 400);
 
-    let name;
-    try { name = await backend.adminDraw(); }
+    const requested = getDrawCount();
+    let names;
+    try { names = await backend.adminDraw(requested); }
     catch (err) {
       gobletWrap.classList.remove('picking');
       document.body.classList.remove('picking');
@@ -1654,7 +1728,7 @@ const CONFIG = {
     }
 
     await delay(200);
-    await refresh();                    // state.winnerName updated -> reveal fires via render()
+    await refresh();                    // state.winnerNames updated -> reveal fires via render()
 
     setTimeout(() => {
       gobletWrap.classList.remove('picking');
@@ -1664,8 +1738,17 @@ const CONFIG = {
   }
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  function showWinner(name) {
-    winnerName.textContent = name;
+  function showWinners(names) {
+    winnerNamesBox.innerHTML = '';
+    winnerNamesBox.classList.toggle('multi', names.length > 1);
+    names.forEach(n => {
+      const el = document.createElement('div');
+      el.className = 'winner-name';
+      el.textContent = n;
+      winnerNamesBox.appendChild(el);
+    });
+    winnerLabel.textContent = names.length > 1 ? 'The Champions are...' : 'The Champion is...';
+    burnWinner.textContent = names.length > 1 ? 'Remove Champions' : 'Remove from Goblet';
     reveal.classList.add('show');
   }
 
@@ -1673,14 +1756,15 @@ const CONFIG = {
 
   closeReveal.addEventListener('click', () => reveal.classList.remove('show'));
   burnWinner.addEventListener('click', async () => {
-    // Find the entry by name and remove it (admin only)
+    // Remove all currently-displayed winners from the goblet (admin only)
     if (!isAdmin) { reveal.classList.remove('show'); return; }
-    const entry = adminEntries.find(e => e.name === shownWinner);
+    const shown = (shownWinnersKey || '').split('|').filter(Boolean);
+    const toRemove = adminEntries.filter(e => shown.includes(e.name));
     reveal.classList.remove('show');
-    if (entry) {
+    for (const entry of toRemove) {
       try { await backend.adminRemove(entry.id); } catch { /* ignore */ }
-      await refresh();
     }
+    if (toRemove.length) await refresh();
   });
   reveal.addEventListener('click', (e) => {
     if (e.target === reveal) reveal.classList.remove('show');
