@@ -138,7 +138,8 @@ set search_path = public
 as $$
 begin
   perform public._require_admin(p_key);
-  delete from public.entries;
+  -- `where true` satisfies Supabase's "DELETE requires a WHERE clause" guard
+  delete from public.entries where true;
   update public.settings set winner_name = null where id = 1;
 end;
 $$;
