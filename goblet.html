@@ -245,6 +245,45 @@
     100% { opacity: 1;   transform: translate(-50%, -50%) scale(1.05); }
   }
 
+  /* ====== Scroll hint ====== */
+  .scroll-hint {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    opacity: 0.9;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+  .scroll-hint.hidden {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  .scroll-hint .chevron {
+    width: 18px;
+    height: 18px;
+    stroke: var(--gold);
+    stroke-width: 2;
+    fill: none;
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
+    animation: scrollBob 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollBob {
+    0%, 100% { transform: translateY(0); opacity: 0.85; }
+    50%      { transform: translateY(6px); opacity: 1; }
+  }
+
   /* ====== Panels ====== */
   .panels {
     display: grid;
@@ -1111,6 +1150,13 @@
       </div>
     </section>
 
+    <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+      <span>Scroll for the parchment</span>
+      <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+        <polyline points="5,9 12,16 19,9" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
     <div class="countdown" id="countdown" style="display:none;" aria-live="polite">
       <div class="eyebrow" id="countdownEyebrow">The Selection Begins In</div>
       <div class="countdown-clock" id="countdownClock">
@@ -1262,6 +1308,21 @@ const CONFIG = {
     }
   }
   spawnEmbers();
+
+  // ---- Scroll hint (hides once the user has scrolled past the fold)
+  const scrollHint = $('scrollHint');
+  if (scrollHint) {
+    const updateScrollHint = () => {
+      const doc = document.documentElement;
+      const pageHeight = Math.max(doc.scrollHeight, document.body.scrollHeight);
+      const scrollable = pageHeight > window.innerHeight + 40;
+      const scrolled = window.scrollY > 80;
+      scrollHint.classList.toggle('hidden', !scrollable || scrolled);
+    };
+    window.addEventListener('scroll', updateScrollHint, { passive: true });
+    window.addEventListener('resize', updateScrollHint);
+    updateScrollHint();
+  }
 
   // ============================================================
   // Storage backend — local (per-browser) or Supabase (shared)
